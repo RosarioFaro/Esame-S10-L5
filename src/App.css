@@ -1,0 +1,42 @@
+body {
+  background-image: url("./assets/leaves.webp");
+  background-repeat: repeat;
+}
+
+.main-cities {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 2em;
+}
+
+.main-cities .card {
+  position: relative;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background: linear-gradient(2deg, #69cdce, #a1e3e0);
+  color: #000000;
+}
+
+.card-content {
+  margin-top: 1em;
+}
+
+.local-time {
+  position: absolute;
+  bottom: 5px;
+  right: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.weather-icon {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}

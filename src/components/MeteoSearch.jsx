@@ -64,50 +64,85 @@ const MeteoSearch = () => {
 export default MeteoSearch;
  */
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import MeteoFetch from "./MeteoFetch";
 import MainCitiesCards from "./MainCitiesCards";
+import { Container } from "react-bootstrap";
 
 const MeteoSearch = () => {
   const [city, setCity] = useState("");
   const [meteoData, setMeteoData] = useState(null);
   const [error, setError] = useState(null);
+  const [mainCitiesMeteo, setMainCitiesMeteo] = useState([]);
+
+  const MainCities = [
+    { name: "Milano" },
+    { name: "Parigi" },
+    { name: "Londra" },
+    { name: "New York" },
+    { name: "Tokyo" },
+    { name: "Los Angeles" },
+    { name: "Berlin" },
+    { name: "Madrid" },
+    { name: "Dubai" },
+    { name: "Sydney" },
+    { name: "Shanghai" },
+    { name: "Seoul" },
+    { name: "Hong Kong" },
+    { name: "Pechino" },
+    { name: "Rio de Janeiro" },
+  ];
+
+  const fetchMainCitiesMeteo = async () => {
+    try {
+      const meteoDataPromises = MainCities.map(async (city) => {
+        const response = await fetch(
+          `https://api.openweathermap.org/data/2.5/weather?appid=28619d98dd7133d7330cadd0c6974d2b&lang=it&q=${city.name}`
+        );
+        const data = await response.json();
+        data.iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+        return data;
+      });
+
+      const allCitiesMeteoData = await Promise.all(meteoDataPromises);
+      setMainCitiesMeteo(allCitiesMeteoData);
+    } catch (error) {
+      console.error("Errore nel recupero dei dati meteo per le città principali:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchMainCitiesMeteo();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const startSearch = () => {
     setMeteoData(null);
     setError(null);
   };
 
-  const MainCities = [
-    { name: "Roma", country: "IT" },
-    { name: "Milano", country: "IT" },
-    { name: "Parigi", country: "FR" },
-    { name: "Londra", country: "GB" },
-    { name: "New York", country: "US" },
-    { name: "Tokyo", country: "JP" },
-  ];
-
   return (
     <div>
-      <input
-        type="text"
-        placeholder="Inserisci il nome della città"
-        value={city}
-        onChange={(event) => setCity(event.target.value)}
-      />
-      <button onClick={startSearch}>Cerca Meteo</button>
+      <div className="searchBar">
+        <input
+          type="text"
+          placeholder="Inserisci il nome della città"
+          value={city}
+          onChange={(event) => setCity(event.target.value)}
+        />
+        <button onClick={startSearch}>Cerca Meteo</button>
+      </div>
 
       <MeteoFetch city={city} setMeteoData={setMeteoData} setError={setError} />
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
+      {error && <p className="text-danger">{error}</p>}
 
       {meteoData && (
-        <div className="card">
+        <div className="card searchedCity">
           <h2>
             {meteoData.name}, {meteoData.sys.country}
           </h2>
           <p>Temperatura: {(meteoData.main.temp - 273.15).toFixed(1)}°C</p>
-
           <p>
             <img src={meteoData.iconUrl} alt="Icona meteo" width={40} height={40} />
             {meteoData.weather[0].description}
@@ -115,7 +150,9 @@ const MeteoSearch = () => {
         </div>
       )}
 
-      <MainCitiesCards MainCities={MainCities} />
+      <Container>
+        <MainCitiesCards citiesMeteo={mainCitiesMeteo} />
+      </Container>
     </div>
   );
 };
