@@ -1,9 +1,16 @@
 import { Row, Col } from "react-bootstrap";
+import { useNavigate } from "react-router";
 
 const MainCitiesCards = ({ citiesMeteo }) => {
+  const navigate = useNavigate();
+
   const getLocalTime = (timezone) => {
     const localTime = new Date(new Date().getTime() + timezone * 1000);
     return localTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  };
+
+  const handleCityClick = (cityData) => {
+    navigate("/meteo-details", { state: { cityData } });
   };
 
   return (
@@ -11,7 +18,11 @@ const MainCitiesCards = ({ citiesMeteo }) => {
       <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
         {citiesMeteo.map((meteoData, index) => (
           <Col key={index}>
-            <div className="card" style={{ position: "relative", paddingBottom: "40px" }}>
+            <div
+              className="card"
+              style={{ position: "relative", paddingBottom: "40px", cursor: "pointer" }}
+              onClick={() => handleCityClick(meteoData)}
+            >
               <div className="card-content">
                 <h2>{meteoData.name}</h2>
                 <p>Temperatura: {(meteoData.main.temp - 273.15).toFixed(1)}°C</p>

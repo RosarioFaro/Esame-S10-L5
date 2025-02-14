@@ -65,6 +65,7 @@ export default MeteoSearch;
  */
 
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router";
 import MeteoFetch from "./MeteoFetch";
 import MainCitiesCards from "./MainCitiesCards";
 import { Container } from "react-bootstrap";
@@ -74,6 +75,8 @@ const MeteoSearch = () => {
   const [meteoData, setMeteoData] = useState(null);
   const [error, setError] = useState(null);
   const [mainCitiesMeteo, setMainCitiesMeteo] = useState([]);
+
+  const navigate = useNavigate();
 
   const MainCities = [
     { name: "Milano" },
@@ -116,9 +119,8 @@ const MeteoSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const startSearch = () => {
-    setMeteoData(null);
-    setError(null);
+  const handleCityClick = (cityData) => {
+    navigate("/meteo-details", { state: { cityData } });
   };
 
   return (
@@ -130,7 +132,7 @@ const MeteoSearch = () => {
           value={city}
           onChange={(event) => setCity(event.target.value)}
         />
-        <button onClick={startSearch}>Cerca Meteo</button>
+        <button>Cerca Meteo</button>
       </div>
 
       <MeteoFetch city={city} setMeteoData={setMeteoData} setError={setError} />
@@ -138,7 +140,7 @@ const MeteoSearch = () => {
       {error && <p className="text-danger">{error}</p>}
 
       {meteoData && (
-        <div className="card searchedCity">
+        <div className="card searchedCity" onClick={() => handleCityClick(meteoData)}>
           <h2>
             {meteoData.name}, {meteoData.sys.country}
           </h2>
@@ -151,7 +153,7 @@ const MeteoSearch = () => {
       )}
 
       <Container>
-        <MainCitiesCards citiesMeteo={mainCitiesMeteo} />
+        <MainCitiesCards citiesMeteo={mainCitiesMeteo} onCityClick={handleCityClick} />
       </Container>
     </div>
   );
