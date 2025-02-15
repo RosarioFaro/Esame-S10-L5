@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router";
+import { iconMap } from "./iconMap";
 import PrevisioniSuccessive from "./PrevisioniSuccessive";
+import { Container, Row, Col } from "react-bootstrap";
 
 const MeteoDetails = () => {
   const location = useLocation();
@@ -28,55 +30,70 @@ const MeteoDetails = () => {
   }
 
   return (
-    <div>
-      <div className="card today-weather mb-4 text-center p-3 shadow-lg">
-        <h2>
-          {cityData.name}, {cityData.sys.country}
-        </h2>
-        <p className="display-4">{(cityData.main.temp - 273.15).toFixed(1)}°C</p>
-        <img src={cityData.iconUrl} alt="Icona meteo" width={100} height={100} />
-        <p className="text-capitalize">{cityData.weather[0].description}</p>
-        <p>Umidità: {cityData.main.humidity}%</p>
-        <p>Vento: {cityData.wind.speed} m/s</p>
-      </div>
+    <Container>
+      <Row>
+        <Col xs={12}>
+          <div className="card today-weather my-4 p-3 shadow-lg">
+            <div className="d-flex justify-content-between align-items-start">
+              <h2 className="mb-0">
+                {cityData.name}, {cityData.sys.country}
+              </h2>
+              <img src={cityData.iconUrl} alt="Icona meteo" width={100} height={100} className="ms-3" />
+            </div>
+            <p className="display-4">{(cityData.main.temp - 273.15).toFixed(1)}°C</p>
+            <p className="text-capitalize">{cityData.weather[0].description}</p>
+            <p>Umidità: {cityData.main.humidity}%</p>
+            <p>Vento: {cityData.wind.speed} m/s</p>
+          </div>
+        </Col>
 
-      <h3 className="text-center mb-3">Previsioni per i prossimi 5 giorni</h3>
-      {error && <p className="text-danger">{error}</p>}
+        <Col xs={12}>
+          <h3 className="text-center mb-3">Previsioni per i prossimi 5 giorni</h3>
+        </Col>
 
-      {forecast ? (
-        <div className="forecast-container row g-3 justify-content-center">
-          {forecast.list
-            .filter((item) => item.dt_txt.includes("12:00:00"))
-            .map((item, index) => (
-              <div key={index} className="col-2 d-flex">
-                <div
-                  className="forecast-card card text-center p-3 shadow-sm"
-                  style={{ width: "300px", height: "auto" }}
-                >
-                  <img
-                    src={`https://openweathermap.org/img/wn/${item.weather[0].icon}@2x.png`}
-                    alt="Icona meteo"
-                    width={50}
-                    height={50}
-                  />
-                  <p className="text-capitalize fw-bold">
-                    {new Date(item.dt * 1000).toLocaleDateString("it-IT", {
-                      weekday: "long",
-                      day: "2-digit",
-                      month: "2-digit",
-                    })}
-                  </p>
+        {error && (
+          <Col xs={12}>
+            <p className="text-danger">{error}</p>
+          </Col>
+        )}
 
-                  <p className="fw-bold">{(item.main.temp - 273.15).toFixed(1)}°C</p>
-                  <p className="text-capitalize">{item.weather[0].description}</p>
-                </div>
-              </div>
-            ))}
-        </div>
-      ) : (
-        <p>Caricamento previsioni...</p>
-      )}
-    </div>
+        {forecast ? (
+          <Col xs={12}>
+            <Row className="g-3 justify-content-between">
+              {forecast.list
+                .filter((item) => item.dt_txt.includes("12:00:00"))
+                .map((item, index) => {
+                  const iconId = item.weather[0].icon;
+                  const iconUrl = iconMap[iconId] || "/assets/iconeMeteo/default-icon.png";
+
+                  return (
+                    <Col key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
+                      <div className="forecast-card card text-center p-3 shadow-sm">
+                        <div className="d-flex justify-content-center align-items-center mb-3">
+                          <img src={iconUrl} alt="Icona meteo" width={50} height={50} />
+                        </div>
+                        <p className="text-capitalize fw-bold">
+                          {new Date(item.dt * 1000).toLocaleDateString("it-IT", {
+                            weekday: "long",
+                            day: "2-digit",
+                            month: "2-digit",
+                          })}
+                        </p>
+                        <p className="fw-bold">{(item.main.temp - 273.15).toFixed(1)}°C</p>
+                        <p className="text-capitalize">{item.weather[0].description}</p>
+                      </div>
+                    </Col>
+                  );
+                })}
+            </Row>
+          </Col>
+        ) : (
+          <Col xs={12}>
+            <p>Caricamento previsioni...</p>
+          </Col>
+        )}
+      </Row>
+    </Container>
   );
 };
 

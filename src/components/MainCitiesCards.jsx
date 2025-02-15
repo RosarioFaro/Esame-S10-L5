@@ -26,7 +26,7 @@ const MainCitiesCards = ({ citiesMeteo }) => {
               <div className="card-content">
                 <h2>{meteoData.name}</h2>
                 <p>Temperatura: {(meteoData.main.temp - 273.15).toFixed(1)}°C</p>
-                <p>{meteoData.weather[0].description}</p>
+                <p className="text-capitalize">{meteoData.weather[0].description}</p>
               </div>
               <img src={meteoData.iconUrl} alt="Icona meteo" className="weather-icon" width={40} height={40} />
               <div className="local-time">{getLocalTime(meteoData.timezone)}</div>

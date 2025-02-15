@@ -105,7 +105,7 @@ const MeteoSearch = () => {
     try {
       const meteoDataPromises = MainCities.map(async (city) => {
         const response = await fetch(
-          `https://api.openweathermap.org/data/2.5/weather?appid=28619d98dd7133d7330cadd0c6974d2b&lang=it&q=${city.name}`
+          `https://api.openweathermap.org/data/2.5/weather?appid=28619d98dd7133d7330cadd0c6974d2b&lang=it&q=${city.name}&limit=1`
         );
         const data = await response.json();
 
