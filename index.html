@@ -2,11 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image" href="./src/assets/meteorology.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Progetto X</title>
+    <title>Meteo & Passione</title>
   </head>
   <body>
+    <button id="toggle-night-mode" class="btn-custom">
+      <img src="./src/assets/iconeMeteo/clear-night.png" alt="Modalità Notturna" width="20" height="20" />
+    </button>
     <div id="background-wrap">
       <div class="x1">
         <div class="cloud"></div>
@@ -30,5 +33,22 @@
     </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        const toggleButton = document.getElementById("toggle-night-mode");
+
+        toggleButton.addEventListener("click", () => {
+          document.body.classList.toggle("night-mode");
+
+          if (document.body.classList.contains("night-mode")) {
+            toggleButton.innerHTML =
+              '<img src="./src/assets/iconeMeteo/sunny.png" alt="Modalità Chiara" width="20" height="20" />';
+          } else {
+            toggleButton.innerHTML =
+              '<img src="./src/assets/iconeMeteo/clear-night.png" alt="Modalità Notturna" width="20" height="20" />';
+          }
+        });
+      });
+    </script>
   </body>
 </html>

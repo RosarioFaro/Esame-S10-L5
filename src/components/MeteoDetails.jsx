@@ -3,6 +3,8 @@ import { useLocation } from "react-router";
 import { iconMap } from "./iconMap";
 import PrevisioniSuccessive from "./PrevisioniSuccessive";
 import { Container, Row, Col } from "react-bootstrap";
+import windsocket from "../assets/wind.png";
+import humidity from "../assets/humidity.png";
 
 const MeteoDetails = () => {
   const location = useLocation();
@@ -33,7 +35,7 @@ const MeteoDetails = () => {
     <Container>
       <Row>
         <Col xs={12}>
-          <div className="card today-weather my-4 p-3 shadow-lg">
+          <div className="today-weather my-4 p-3 shadow-lg">
             <div className="d-flex justify-content-between align-items-start">
               <h2 className="mb-0">
                 {cityData.name}, {cityData.sys.country}
@@ -42,8 +44,12 @@ const MeteoDetails = () => {
             </div>
             <p className="display-4">{(cityData.main.temp - 273.15).toFixed(1)}°C</p>
             <p className="text-capitalize">{cityData.weather[0].description}</p>
-            <p>Umidità: {cityData.main.humidity}%</p>
-            <p>Vento: {cityData.wind.speed} m/s</p>
+            <p>
+              <img src={humidity} alt="humidity" width={50} height={50} /> : {cityData.main.humidity}%
+            </p>
+            <p>
+              <img src={windsocket} alt="windsocket" width={50} height={50} /> : {cityData.wind.speed} m/s
+            </p>
           </div>
         </Col>
 
