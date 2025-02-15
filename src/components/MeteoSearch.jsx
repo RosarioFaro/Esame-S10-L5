@@ -69,12 +69,22 @@ import { useNavigate } from "react-router";
 import MeteoFetch from "./MeteoFetch";
 import MainCitiesCards from "./MainCitiesCards";
 import { Container } from "react-bootstrap";
+import { iconMap } from "./iconMap";
 
 const MeteoSearch = () => {
   const [city, setCity] = useState("");
   const [meteoData, setMeteoData] = useState(null);
   const [error, setError] = useState(null);
   const [mainCitiesMeteo, setMainCitiesMeteo] = useState([]);
+  const [search, setSearch] = useState(false);
+
+  const startSearch = () => {
+    if (city.trim() === "") {
+      setSearch(false);
+    }
+    setSearch(true);
+    setError(null);
+  };
 
   const navigate = useNavigate();
 
@@ -84,16 +94,11 @@ const MeteoSearch = () => {
     { name: "Londra" },
     { name: "New York" },
     { name: "Tokyo" },
-    { name: "Los Angeles" },
+    { name: "Las Vegas" },
     { name: "Berlin" },
     { name: "Madrid" },
     { name: "Dubai" },
     { name: "Sydney" },
-    { name: "Shanghai" },
-    { name: "Seoul" },
-    { name: "Hong Kong" },
-    { name: "Pechino" },
-    { name: "Rio de Janeiro" },
   ];
 
   const fetchMainCitiesMeteo = async () => {
@@ -103,7 +108,12 @@ const MeteoSearch = () => {
           `https://api.openweathermap.org/data/2.5/weather?appid=28619d98dd7133d7330cadd0c6974d2b&lang=it&q=${city.name}`
         );
         const data = await response.json();
-        data.iconUrl = `https://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`;
+
+        console.log(data);
+
+        const iconId = data.weather[0].icon;
+        data.iconUrl = iconMap[iconId] || "/assets/iconeMeteo/default-icon.png";
+
         return data;
       });
 
@@ -119,28 +129,31 @@ const MeteoSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleCityClick = (cityData) => {
+  const manageCityClick = (cityData) => {
     navigate("/meteo-details", { state: { cityData } });
   };
 
   return (
     <div>
-      <div className="searchBar">
+      <div className="searchBar d-flex justify-content-center align-items-center gap-2 my-3">
         <input
           type="text"
+          className="form-control w-auto"
           placeholder="Inserisci il nome della città"
           value={city}
           onChange={(event) => setCity(event.target.value)}
         />
-        <button>Cerca Meteo</button>
+        <button className="btn btn-custom" onClick={startSearch}>
+          Cerca Meteo
+        </button>
       </div>
 
-      <MeteoFetch city={city} setMeteoData={setMeteoData} setError={setError} />
+      {search && <MeteoFetch city={city} setMeteoData={setMeteoData} setError={setError} />}
 
       {error && <p className="text-danger">{error}</p>}
 
       {meteoData && (
-        <div className="card searchedCity" onClick={() => handleCityClick(meteoData)}>
+        <div className="card searchedCity" onClick={() => manageCityClick(meteoData)}>
           <h2>
             {meteoData.name}, {meteoData.sys.country}
           </h2>
@@ -153,7 +166,7 @@ const MeteoSearch = () => {
       )}
 
       <Container>
-        <MainCitiesCards citiesMeteo={mainCitiesMeteo} onCityClick={handleCityClick} />
+        <MainCitiesCards citiesMeteo={mainCitiesMeteo} onCityClick={manageCityClick} />
       </Container>
     </div>
   );

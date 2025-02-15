@@ -9,7 +9,7 @@ const MainCitiesCards = ({ citiesMeteo }) => {
     return localTime.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
-  const handleCityClick = (cityData) => {
+  const manageCityClick = (cityData) => {
     navigate("/meteo-details", { state: { cityData } });
   };
 
@@ -21,7 +21,7 @@ const MainCitiesCards = ({ citiesMeteo }) => {
             <div
               className="card"
               style={{ position: "relative", paddingBottom: "40px", cursor: "pointer" }}
-              onClick={() => handleCityClick(meteoData)}
+              onClick={() => manageCityClick(meteoData)}
             >
               <div className="card-content">
                 <h2>{meteoData.name}</h2>

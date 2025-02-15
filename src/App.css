@@ -3,6 +3,14 @@ body {
   background-repeat: repeat;
 }
 
+.btn-custom {
+  background-color: #a9edea;
+}
+
+.btn-custom:hover {
+  background-color: #d0f4f2;
+}
+
 .main-cities {
   display: flex;
   flex-wrap: wrap;
@@ -19,7 +27,7 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: linear-gradient(2deg, #69cdce, #a1e3e0);
+  background: linear-gradient(20deg, #69cdce, #a9edea);
   color: #000000;
 }
 
