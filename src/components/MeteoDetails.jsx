@@ -74,7 +74,7 @@ const MeteoDetails = () => {
 
                   return (
                     <Col key={index} xs={12} sm={6} md={4} lg={3} xl={2}>
-                      <div className="forecast-card card text-center p-3 shadow-sm">
+                      <div className="forecast-card card text-center p-3 shadow-sm mb-5">
                         <div className="d-flex justify-content-center align-items-center mb-3">
                           <img src={iconUrl} alt="Icona meteo" width={50} height={50} />
                         </div>
