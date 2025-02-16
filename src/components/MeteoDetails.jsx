@@ -63,24 +63,35 @@ const MeteoDetails = () => {
           <h3 className="text-center mt-3">Previsioni del {today}</h3>
         </Col>
         <Col xs={12}>
-          <div className="today-weather my-4 p-3 shadow-lg">
-            <div className="d-flex justify-content-between align-items-start">
-              <h2 className="mb-0">
-                {cityData.name}, {cityData.sys.country}
-              </h2>
-              <img src={cityData.iconUrl} alt="Icona meteo" width={100} height={100} className="ms-3" />
+          <div className="today-weather my-4 p-4 shadow-lg">
+            <div className="row align-items-start flex-md-nowrap">
+              <div className="col-8 col-md-8 col-lg-8 d-flex flex-column">
+                <h2 className="mb-0">
+                  {cityData.name}, {cityData.sys.country}
+                </h2>
+                <p className="display-3 fw-bold">{(cityData.main.temp - 273.15).toFixed(1)}°C</p>
+                <small className="d-block mb-3">(Percepita: {(cityData.main.feels_like - 273.15).toFixed(1)}°C)</small>
+                <p className="text-capitalize fs-4">{cityData.weather[0].description}</p>
+
+                <div className="d-flex align-items-center mb-2">
+                  <img src={humidity} alt="humidity" width={40} height={40} className="me-2" />
+                  <span className="fs-5"> : {cityData.main.humidity}%</span>
+                </div>
+
+                <div className="d-flex align-items-center mb-3 d-none d-sm-block">
+                  <img src={windsocket} alt="windsocket" width={40} height={40} className="me-2" />
+                  <span className="fs-5"> : {(cityData.wind.speed * 3.6).toFixed(1)} km/h</span>
+                </div>
+
+                <button onClick={aggiungiAiPreferiti} className="btn btn-primary d-flex align-items-center">
+                  Aggiungi ai preferiti
+                </button>
+              </div>
+
+              <div className="col-4 col-md-4 col-lg-4 text-end">
+                <img src={cityData.iconUrl} alt="Icona meteo" className="img-fluid weather-icon" />
+              </div>
             </div>
-            <p className="display-4">{(cityData.main.temp - 273.15).toFixed(1)}°C</p>
-            <p className="text-capitalize">{cityData.weather[0].description}</p>
-            <p>
-              <img src={humidity} alt="humidity" width={50} height={50} /> : {cityData.main.humidity}%
-            </p>
-            <p>
-              <img src={windsocket} alt="windsocket" width={50} height={50} /> : {cityData.wind.speed} m/s
-            </p>
-            <button onClick={aggiungiAiPreferiti} className="btn btn-primary">
-              Aggiungi ai preferiti
-            </button>
           </div>
         </Col>
 
