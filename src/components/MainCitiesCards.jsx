@@ -8,8 +8,8 @@ const MainCitiesCards = ({ citiesMeteo }) => {
 
   const getLocalTime = (timezone) => {
     const nowInUTC = Date.now();
-    const cityTimeInMillis = nowInUTC + (timezone - 3600) * 1000;
-    const cityDate = new Date(cityTimeInMillis);
+    const cityTimeInMs = nowInUTC + (timezone - 3600) * 1000;
+    const cityDate = new Date(cityTimeInMs);
     return cityDate.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   };
 
@@ -33,15 +33,11 @@ const MainCitiesCards = ({ citiesMeteo }) => {
 
   return (
     <div className="main-cities mb-5">
-      <Row xs={1} sm={2} md={3} lg={4} xl={5} className="g-4">
+      <Row xs={1} sm={2} xl={5} className="d-flex justify-content-between gy-2">
         {citiesMeteo.map((meteoData, index) => (
           <Col key={index}>
-            <div
-              className="card h-100 shadow-sm"
-              style={{ position: "relative", cursor: "pointer" }}
-              onClick={() => manageCityClick(meteoData)}
-            >
-              <div className="card-body">
+            <div className="card h-100 shadow-sm" onClick={() => manageCityClick(meteoData)}>
+              <div className="card-body p-2">
                 <h2 className="card-title">{meteoData.name}</h2>
                 <p className="card-text text-capitalize">{meteoData.weather[0].description}</p>
                 <p className="card-text">

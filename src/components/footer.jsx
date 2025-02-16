@@ -12,7 +12,7 @@ const Footer = () => {
           <div className="col col-12">
             <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 justify-content-center text-start">
               {footerTexts.map((column, colIndex) => (
-                <div key={colIndex} className="col mb-3">
+                <div key={colIndex} className="col mb-1">
                   <ul className="list-unstyled">
                     {column.map((link, linkIndex) => (
                       <li key={linkIndex}>
@@ -25,11 +25,12 @@ const Footer = () => {
                 </div>
               ))}
             </div>
-            <ul className="list-unstyled text-start">
+            <ul className="list-unstyled text-start mb-0">
               <li>
                 <a
-                  href="https://www.flaticon.com/free-icons/meteorology"
+                  href="https://www.flaticon.com/authors/freepik"
                   title="meteorology icons"
+                  target="_blank"
                   className="text-decoration-none text-black"
                 >
                   Icone create da Freepik - Flaticon
@@ -39,6 +40,7 @@ const Footer = () => {
                 <a
                   href="https://codepen.io/Mark_Bowley/pen/LYZEBq"
                   title="backgound"
+                  target="_blank"
                   className="text-decoration-none text-black"
                 >
                   Sfondo gentilmente offerto da Mark Bowley

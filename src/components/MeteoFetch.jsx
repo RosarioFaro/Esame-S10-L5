@@ -1,22 +1,22 @@
 import { useEffect } from "react";
 import { iconMap } from "./iconMap";
 
-const MeteoFetch = ({ city, setMeteoData, setError }) => {
+const MeteoFetch = ({ city, setMeteoData, setError, setIsLoading }) => {
   useEffect(() => {
     if (city.trim() === "") return;
 
     const cityMeteoFetch = async () => {
+      setIsLoading(true);
       try {
         const geoResponse = await fetch(
           `https://api.openweathermap.org/geo/1.0/direct?appid=28619d98dd7133d7330cadd0c6974d2b&q=${city}&limit=1&lang=it`
         );
         const geoData = await geoResponse.json();
 
-        console.log("Risultato geocodifica:", geoData);
-
         if (geoData.length === 0) {
           setError("Città non trovata");
           setMeteoData(null);
+          setIsLoading(false);
           return;
         }
 
@@ -27,8 +27,6 @@ const MeteoFetch = ({ city, setMeteoData, setError }) => {
         );
         const meteoData = await meteoResp.json();
 
-        console.log("Dati meteo ricevuti:", meteoData);
-
         meteoData.name = name;
         meteoData.country = country;
 
@@ -37,15 +35,17 @@ const MeteoFetch = ({ city, setMeteoData, setError }) => {
 
         setMeteoData(meteoData);
         setError(null);
+        // eslint-disable-next-line no-unused-vars
       } catch (error) {
-        console.error("Errore:", error);
         setError("Si è verificato un errore durante la ricerca.");
         setMeteoData(null);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     cityMeteoFetch();
-  }, [city, setMeteoData, setError]);
+  }, [city, setMeteoData, setError, setIsLoading]);
 
   return null;
 };

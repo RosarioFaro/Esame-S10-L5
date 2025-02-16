@@ -5,13 +5,16 @@ import PrevisioniSuccessive from "./PrevisioniSuccessive";
 import { Container, Row, Col } from "react-bootstrap";
 import windsocket from "../assets/wind.png";
 import humidity from "../assets/humidity.png";
+import Alert from "./Alert";
 
 const MeteoDetails = () => {
   const location = useLocation();
-  const cityData = location.state?.cityData;
+  const cityData = location.state.cityData;
 
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
+  const [alertMessage, setAlertMessage] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
     if (cityData) {
@@ -27,6 +30,28 @@ const MeteoDetails = () => {
     }
   }, [cityData]);
 
+  const aggiungiAiPreferiti = () => {
+    const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    if (!favorites.some((city) => city.name === cityData.name)) {
+      favorites.push(cityData);
+      localStorage.setItem("favorites", JSON.stringify(favorites));
+      setAlertMessage(`${cityData.name} è stata aggiunta ai preferiti!`);
+      setShowAlert(true);
+    } else {
+      setAlertMessage(`${cityData.name} è già nei preferiti.`);
+      setShowAlert(true);
+    }
+
+    setTimeout(() => {
+      setShowAlert(false);
+    }, 3000);
+  };
+
+  const today = new Date().toLocaleDateString("it-IT", {
+    day: "2-digit",
+    month: "2-digit",
+  });
+
   if (!cityData) {
     return <h2>Nessun dato disponibile</h2>;
   }
@@ -34,6 +59,9 @@ const MeteoDetails = () => {
   return (
     <Container>
       <Row>
+        <Col xs={12}>
+          <h3 className="text-center mt-3">Previsioni del {today}</h3>
+        </Col>
         <Col xs={12}>
           <div className="today-weather my-4 p-3 shadow-lg">
             <div className="d-flex justify-content-between align-items-start">
@@ -50,6 +78,9 @@ const MeteoDetails = () => {
             <p>
               <img src={windsocket} alt="windsocket" width={50} height={50} /> : {cityData.wind.speed} m/s
             </p>
+            <button onClick={aggiungiAiPreferiti} className="btn btn-primary">
+              Aggiungi ai preferiti
+            </button>
           </div>
         </Col>
 
@@ -99,6 +130,8 @@ const MeteoDetails = () => {
           </Col>
         )}
       </Row>
+
+      <Alert show={showAlert} message={alertMessage} onClose={() => setShowAlert(false)} />
     </Container>
   );
 };
