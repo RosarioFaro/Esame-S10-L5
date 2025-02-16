@@ -38,7 +38,10 @@ const Preferiti = () => {
                     width={50}
                     height={50}
                   />
-                  <Link to={`/meteo-details`} state={{ cityData: city }} className="btn btn-info mt-2 me-2">
+                  <Link
+                    to={`/meteo-details?city=${city.name}&country=${city.sys.country}`}
+                    className="btn btn-info mt-2 me-2"
+                  >
                     Vedi dettagli
                   </Link>
                   <button className="btn btn-danger mt-2" onClick={() => rimuoviDaiPreferiti(city.name)}>

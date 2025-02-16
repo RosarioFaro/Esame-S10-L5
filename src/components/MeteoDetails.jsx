@@ -9,28 +9,47 @@ import Alert from "./Alert";
 
 const MeteoDetails = () => {
   const location = useLocation();
-  const cityData = location.state.cityData;
+  const searchParams = new URLSearchParams(location.search);
+  const cityName = searchParams.get("city");
+  const country = searchParams.get("country");
 
+  const [cityData, setCityData] = useState(null);
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState(null);
   const [alertMessage, setAlertMessage] = useState("");
   const [showAlert, setShowAlert] = useState(false);
 
   useEffect(() => {
-    if (cityData) {
-      PrevisioniSuccessive(cityData.coord.lat, cityData.coord.lon)
+    if (cityName && country) {
+      fetch(
+        `https://api.openweathermap.org/data/2.5/weather?appid=28619d98dd7133d7330cadd0c6974d2b&lang=it&q=${cityName},${country}&limit=1`
+      )
+        .then((response) => response.json())
         .then((data) => {
-          if (data) {
-            setForecast(data);
+          if (data.cod === 200) {
+            setCityData(data);
+            const iconId = data.weather[0].icon;
+            data.iconUrl = iconMap[iconId] || "/assets/iconeMeteo/default-icon.png";
+            return PrevisioniSuccessive(data.coord.lat, data.coord.lon);
+          } else {
+            setError("Città non trovata");
+            return null;
+          }
+        })
+        .then((forecastData) => {
+          if (forecastData) {
+            setForecast(forecastData);
           } else {
             setError("Errore nel recupero delle previsioni");
           }
         })
         .catch((err) => setError(err.message));
     }
-  }, [cityData]);
+  }, [cityName, country]);
 
   const aggiungiAiPreferiti = () => {
+    if (!cityData) return;
+
     const favorites = JSON.parse(localStorage.getItem("favorites")) || [];
     if (!favorites.some((city) => city.name === cityData.name)) {
       favorites.push(cityData);

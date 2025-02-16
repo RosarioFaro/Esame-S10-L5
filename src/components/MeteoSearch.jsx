@@ -94,7 +94,7 @@ const MeteoSearch = () => {
   }, [meteoData]);
 
   const manageCityClick = (cityData) => {
-    navigate("/meteo-details", { state: { cityData } });
+    navigate(`/meteo-details?city=${cityData.name}&country=${cityData.sys.country}`);
   };
 
   return (
